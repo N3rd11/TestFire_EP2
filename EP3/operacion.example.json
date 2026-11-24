@@ -1,0 +1,9 @@
+{
+  "queue_url": "http://127.0.0.1:18103",
+  "token": "REEMPLAZAR_CON_TOKEN_ALEATORIO_DE_32_CARACTERES_O_MAS",
+  "worker": "pc-laboratorio-1",
+  "usar_archivo_demo": false,
+  "servir_archivo_demo": false,
+  "source_api_url": "",
+  "source_api_token": ""
+}

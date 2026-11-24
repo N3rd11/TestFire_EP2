@@ -1,0 +1,35 @@
+flowchart TD
+    A([Ciclo de Rocketbot]) -->|Canal operativo| E[EP3_ENCOLAR<br/>Clave por proceso y periodo]
+    E --> T[EP3_LEER_COLA<br/>Toma SQL atómica]
+    T -->|Ocupada o completada| Z([Fin del ciclo])
+    T -->|Concesión| M{Fuente}
+    T -->|Envío reservado del mismo equipo| R[Buscar correo por UUID original]
+    M -->|Web| L[Login y extracción]
+    M -->|Demo| D[Movimientos sintéticos]
+    L -->|Tabla válida| V[Validar y conciliar]
+    L -->|Lenta, vacía o con fallo| B[EP3_RESPALDO_API]
+    B -->|Contrato válido| V
+    A -->|DEMO_CORREO_LOCAL_EP3| D
+    D --> V
+    V --> P[Consulta Banco Mundial e integración XLSX]
+    P --> X[Apertura y validación del XLSX]
+    X --> O{Modo y origen}
+    O -->|Archivo histórico, borrador o sin envío| H[Conservar reporte y registrar modo]
+    O -->|SMTP local| J[Verificar adjunto contra manifiesto SHA-256]
+    J --> K[Reservar envío por UUID]
+    K --> I[Enviar por SMTP local y validar el MIME recibido]
+    I -->|SMTP 250| JJ[Guardar EML, vista HTML y acuse]
+    JJ --> Z
+    I -->|Fallo SMTP| FF[Registrar fallo y conservar XLSX]
+    K -->|Ya reservado| FF
+    FF --> Z
+    H --> Z
+    O -->|Entrega autorizada| C[Verificar Outlook y reservar envío]
+    C --> S[Solicitar Send una vez]
+    S --> R
+    R -->|Enviados y Entrada con adjunto| Q[Categorizar y cerrar cola]
+    R -->|Pendiente| W[Próximo ciclo verifica el acuse]
+    W --> R
+    B -. Fallo previo al despacho .-> F[Reintentar hasta tres veces]
+    P -. Fallo previo al despacho .-> F
+    X -. Fallo previo al despacho .-> F

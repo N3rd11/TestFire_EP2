@@ -1,0 +1,10 @@
+outlook.local.json
+operacion.local.json
+cola/
+ejecuciones/
+gmail-cliente.local.json
+gmail-token.local.json
+.runtime-correo/
+
+smtp-credencial.local.clixml
+smtp-preparacion-*.clixml
